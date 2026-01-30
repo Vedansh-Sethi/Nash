@@ -1,5 +1,4 @@
 import 'package:app/config/theme.dart';
-import 'package:app/pages/home/widgets/group_card.dart';
 import 'package:app/pages/home/widgets/group_card_scroll_view.dart';
 import 'package:app/pages/home/widgets/home_created_bets_carousel.dart';
 import 'package:app/pages/home/widgets/home_placed_bets_carousel.dart';
