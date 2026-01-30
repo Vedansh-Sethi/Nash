@@ -1,4 +1,5 @@
 import 'package:app/config/theme.dart';
+import 'package:app/pages/bet/widgets/bet_trends_card.dart';
 import 'package:flutter/material.dart';
 
 import 'widgets/bet_details_card.dart';
@@ -96,7 +97,11 @@ class _BetPageState extends State<BetPage> {
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [BetDetailsCard(data: data)],
+                children: [
+                  BetDetailsCard(data: data),
+                  const SizedBox(height: 16),
+                  BetTrendsCard(data: data),
+                ],
               ),
             ),
           ],
