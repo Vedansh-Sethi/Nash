@@ -4,11 +4,22 @@ import { User } from "./users.model.js";
 
 const chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
+const mapRowToUser = (row: any): User => {
+  return {
+    id: row.id,
+    username: row.username,
+    email: row.email,
+    wallet_balance: row.wallet_balance,
+    referral_code: row.referral_code,
+    created_at: row.created_at,
+  };
+};
+
 export const createUser = async (
   username: string,
   email: string,
   client: PoolClient,
-) => {
+): Promise<User> => {
   let referralCode = "";
   for (let i = length; i > 0; --i) {
     referralCode += chars[Math.floor(Math.random() * chars.length)];
@@ -21,7 +32,7 @@ export const createUser = async (
     [username, email, referralCode],
   );
 
-  return result.rows[0];
+  return mapRowToUser(result.rows[0]);
 };
 
 export const findUserByEmail = async (email: string) => {
@@ -34,18 +45,17 @@ export const findUserByEmail = async (email: string) => {
 
   if (!result.rows[0]) return null;
 
-  return result.rows[0];
+  return mapRowToUser(result.rows[0]);
 };
 
 export const getUserFromDB = async (userId: string): Promise<User> => {
   const result = await pool.query("SELECT * FROM users WHERE id = $1", [
     userId,
   ]);
-  if (result.rows.length === 0) {
-    throw new Error("User not found");
-  } else {
-    return result.rows[0];
-  }
+
+  if (result.rows.length === 0) throw new Error("User not found");
+
+  return mapRowToUser(result.rows[0]);
 };
 
 export const performDailyCheckIn = async (

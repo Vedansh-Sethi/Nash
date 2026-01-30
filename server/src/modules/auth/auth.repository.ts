@@ -50,38 +50,6 @@ export const findUserByID = async (id: string): Promise<AuthUser | null> => {
   return mapRowToUser(result.rows[0]);
 };
 
-// IMPORTANT: Whenever you need to conduct a SQL query transaction, follow this format of repo code
-// export const createRefreshToken = async (userID: string, token: string) => {
-//   const client = await pool.connect();
-
-//   try {
-//     const milliInDay = 1000 * 60 * 60 * 24;
-
-//     await client.query("BEGIN");
-
-//     // Revoke the existing Refresh Tokens
-//     await client.query(
-//       `UPDATE refresh_tokens
-//        SET revoked=true
-//        WHERE user_id=$1`,
-//       [userID],
-//     );
-
-//     await client.query(
-//       `INSERT INTO refresh_tokens (user_id, token, expires_at)
-//        VALUES ($1, $2, $3)`,
-//       [userID, token, new Date(Date.now() + 7 * milliInDay)],
-//     );
-
-//     await client.query("COMMIT");
-//   } catch (err: any) {
-//     await client.query("ROLLBACK");
-//     throw err;
-//   } finally {
-//     client.release();
-//   }
-// };
-
 export const createRefreshToken = async (userID: string, token: string) => {
   const milliInDay = 1000 * 60 * 60 * 24;
 
