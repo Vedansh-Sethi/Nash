@@ -48,7 +48,7 @@ export const addMember = async (
         username: newMember.username,
         email: newMember.email,
         role: newMember.role,
-        joinedAt: newMember.joined_at,
+        joined_at: newMember.joined_at,
     };
 }
 
