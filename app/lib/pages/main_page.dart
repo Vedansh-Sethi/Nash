@@ -86,10 +86,13 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
               onTap: () => GoRouter.of(context).push('/profile/123'),
               child: Row(
                 children: [
-                  const CircleAvatar(
-                    radius: 20,
-                    backgroundImage: NetworkImage(
-                      "https://i.pravatar.cc/150?img=11",
+                  Hero(
+                    tag: 'pfp',
+                    child: const CircleAvatar(
+                      radius: 20,
+                      backgroundImage: NetworkImage(
+                        "https://cdn.dribbble.com/users/18924830/avatars/normal/25cecaeb59d31d07887ff220ea9ab686.png?1728297612",
+                      ),
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -105,11 +108,14 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                       ),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: Text(
-                      ('\$${200.formatWithCommas()}'),
-                      style: TextStyle(
-                        color: context.colorScheme.primary,
-                        fontWeight: FontWeight.bold,
+                    child: Hero(
+                      tag: 'wallet_balance',
+                      child: Text(
+                        ('\$${200.formatWithCommas()}'),
+                        style: TextStyle(
+                          color: context.colorScheme.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),

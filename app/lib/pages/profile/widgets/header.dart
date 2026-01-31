@@ -44,9 +44,8 @@ class ProfileHeader extends StatelessWidget {
             height: 100,
             width: 100,
             padding: const EdgeInsets.all(8),
-            child: ClipRRect(
-              borderRadius: BorderRadiusGeometry.circular(100),
-              child: Image.network(
+            child: const CircleAvatar(
+              backgroundImage: NetworkImage(
                 "https://cdn.dribbble.com/users/18924830/avatars/normal/25cecaeb59d31d07887ff220ea9ab686.png?1728297612",
               ),
             ),
