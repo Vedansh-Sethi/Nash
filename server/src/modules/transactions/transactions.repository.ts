@@ -2,21 +2,21 @@ import pool from "../../config/db.js";
 import { BetTransactionsResponseDTO } from "./dtos/bet-transactions.dto.js";
 import { BetTransactions, BetTransaction, UserTransaction, UserTransactions } from "./transactions.model.js";
 
-const mapRowToBetTransaction = (row:any):BetTransaction => {
+const mapRowToBetTransaction = (row: any): BetTransaction => {
     return {
-        amount : row.amount,
+        amount: row.amount,
         option: row.selected_option,
-        placed_at:row.created_at,
+        placed_at: row.created_at,
         user_id: row.user_id
     }
 }
 
-const mapRowToUserTransaction = (row:any):UserTransaction => {
+const mapRowToUserTransaction = (row: any): UserTransaction => {
     return {
-        amount : row.amount,
-        placed_at:row.created_at,
-        bet_id : row.bet_id,
-        description : row.description
+        amount: row.amount,
+        placed_at: row.created_at,
+        bet_id: row.bet_id,
+        description: row.description
     }
 }
 
@@ -33,7 +33,7 @@ export const getBetTransactions = async (
         const result = userBets.rows.map((row: any) => {
             mapRowToBetTransaction(row);
         })
-        return result;
+        return { transactions: result };
     } catch (err: any) {
         throw err;
     }
@@ -52,7 +52,27 @@ export const getUserTransactions = async (
         const result = userBets.rows.map((row: any) => {
             mapRowToUserTransaction(row);
         })
-        return result;
+        return {
+            transactions: result
+        };
+    } catch (err: any) {
+        throw err;
+    }
+}
+
+export const createTransaction = async (
+    betId: string,
+    userId: string,
+    amount: number,
+    description: string
+): Promise<any> => {
+    try {
+        const now: Date = new Date(Date.now());
+        const result = pool.query(
+            `INSERT INTO transactions (bet_id, user_id, amount, description, created_at)
+            VALUES ($1, $2, $3, $4, $5)`,
+            [betId, userId, amount, description, now]
+        )
     } catch (err: any) {
         throw err;
     }
