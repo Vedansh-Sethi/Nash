@@ -38,7 +38,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: '/group',
+                path: '/groups',
                 builder: (context, state) => const GroupPage(),
               ),
             ],
