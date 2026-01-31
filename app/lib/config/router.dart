@@ -8,13 +8,14 @@ import 'package:go_router/go_router.dart';
 
 import '/pages/bet/bet.dart';
 import '/pages/login/login.dart';
+import '/pages/profile/profile.dart';
 import '/pages/register/register.dart';
 import '/pages/home/home.dart';
 import '/pages/main_page.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: '/home',
+    initialLocation: '/profile/123',
     routes: [
       StatefulShellRoute(
         builder: (context, state, navigationShell) {
@@ -71,7 +72,12 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/groups/:group_id',
         builder: (context, state) =>
             GroupInfo(groupID: state.pathParameters["group_id"]!),
-      )
+      ),
+      GoRoute(
+        path: '/profile/:user_id',
+        builder: (context, state) =>
+            ProfilePage(userID: state.pathParameters["user_id"]!),
+      ),
     ],
   );
 });
