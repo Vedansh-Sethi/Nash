@@ -95,7 +95,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                   const SizedBox(width: 16),
                   Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
+                      horizontal: 8,
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
