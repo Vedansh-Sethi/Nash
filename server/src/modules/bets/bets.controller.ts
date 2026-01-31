@@ -37,3 +37,12 @@ export const placeBet = async (req: AuthRequest, res: Response) => {
         res.status(400).json({error: err.message})
     }
 }
+
+export const decideBet = async (req: AuthRequest, res: Response) => {
+    try {
+        const result = await betServices.decideBet(req.user, req.params.bet_id as string, req.body.option)
+        res.status(201).json(result)
+    } catch (err: any) {
+        res.status(400).json({error: err.message})
+    }
+}

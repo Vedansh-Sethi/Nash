@@ -11,5 +11,6 @@ router.get('/:group_id/bet/:bet_id', authenticate, betControllers.getBet)
 router.get('/:group_id/bet', authenticate, betControllers.getAllBets)
 router.post('/:group_id/bet', authenticate, betControllers.postBet)
 router.post('/:group_id/bet/:bet_id', authenticate, betControllers.placeBet)
+router.post('/:group_id/bet/:bet_id/decide', authenticate, betControllers.decideBet)
 
 export default router;

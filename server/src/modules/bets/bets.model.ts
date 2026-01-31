@@ -27,6 +27,5 @@ export interface UserBet {
     user_id: string,
     amount: number,
     selected_option: string,
-    status: string,
     created_at: Date
 }

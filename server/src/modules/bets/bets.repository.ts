@@ -24,7 +24,6 @@ const mapRowToUserBet = (row: any): UserBet => {
         user_id: row.user_id,
         amount: row.amount,
         selected_option: row.selected_option,
-        status: row.status,
         created_at: row.created_at
     }
 }
@@ -56,7 +55,8 @@ export const getAllBetsOfGroupFromDB = async (groupId: string): Promise<Bet[]> =
 
 export const getAllUserBetsFromDB = async (): Promise<UserBet[]> => {
     const result = await pool.query(`SELECT * FROM user_bets`)
-    return result.rows.map((row)=> mapRowToBet(row));
+    // return result.rows.map((row)=> mapRowToBet(row));
+    return result.rows;
 }
 
 export const postBet = async (authUserID:string , groupId: string, title: string, expires_at: number): Promise<Bet> => {
@@ -71,7 +71,7 @@ export const placeBet = async (userId: string, betId: string, amount: number, op
     
     await client.query("BEGIN");
 
-    const result = await client.query(`INSERT INTO user_bets (bet_id,user_id,amount,selected_option,status,created_at) VALUE ($1,$2$3,$4,$5) RETURNING *`,[betId,userId,amount,option,'open', new Date(Date.now())])
+    const result = await client.query(`INSERT INTO user_bets (bet_id,user_id,amount,selected_option,created_at) VALUES ($1,$2,$3,$4,$5) RETURNING *`,[betId,userId,amount,option, new Date(Date.now())])
     await client.query(`UPDATE bets SET total_pot = total_pot + $1 WHERE id = $2`, [amount, betId]);
     await client.query(`UPDATE users SET wallet_balance = wallet_balance - $1 WHERE id = $2`, [amount, userId]);
 
@@ -84,4 +84,28 @@ export const placeBet = async (userId: string, betId: string, amount: number, op
   } finally {
     client.release()
   }
+}
+
+export const decideBet = async (betId: string, option: string): Promise<Bet> => {
+  const client = await pool.connect();
+
+  try {
+    
+    await client.query("BEGIN");
+
+    const result = await client.query("UPDATE bets SET winning_option = $1 WHERE id=$2 RETURNING *",[option,betId])
+    // await client.query(`UPDATE bets SET status = $1 WHERE id = $2`,[option,betId])
+    await client.query(`COMMIT`);
+    return mapRowToBet(result.rows[0]);
+
+  } catch (err: any) {
+    await client.query("ROLLBACK");
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
+export const markResolved = async (betId: string): Promise<void> => {
+  await pool.query(`UPDATE bets SET status = $1 WHERE id=$2`,['resolved',betId])
 }

@@ -112,3 +112,10 @@ export const performDailyCheckIn = async (
     client.release();
   }
 };
+
+export const updateUserWalletBalance = async (
+  userId:string,
+  payout:number
+): Promise<void> => {
+  await pool.query(`UPDATE users SET wallet_balance = wallet_balance + $1 WHERE id = $2`,[payout,userId])
+}
