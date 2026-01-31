@@ -11,7 +11,7 @@ class SearchPage extends StatelessWidget {
         padding: const EdgeInsetsGeometry.all(16.0),
         child: Column(
           children: [
-            SizedBox(height: 40.0),
+            SizedBox(height: 12.0),
             CustomTextField(hintText: 'Search')
           ],
         ),
