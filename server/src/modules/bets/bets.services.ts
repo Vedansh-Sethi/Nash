@@ -175,5 +175,10 @@ export const decideBet = async (
 
   userRepository.updateUserWalletBalance(bet.created_by, creatorCut);
 
+  emitToRoom(betId, "bet_status_change", {
+    status: "resolved",
+    winning_option: option,
+  });
+
   return bet;
 };
