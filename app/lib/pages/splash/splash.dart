@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '/providers/auth_state_provider.dart';
 import '/services/storage_service.dart';
 import '../../controllers/auth.dart';
 
@@ -33,7 +32,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen<AuthStatus>(authStateProvider, (prev, next) {
+    ref.listen<AuthStatus>(authControllerProvider, (prev, next) {
       if (prev == AuthStatus.authenticated &&
           next == AuthStatus.unauthenticated) {
         ScaffoldMessenger.of(context).showSnackBar(

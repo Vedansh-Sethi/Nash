@@ -15,7 +15,6 @@ import '/pages/profile/profile.dart';
 import '/pages/register/register.dart';
 import '/pages/search/search.dart';
 import '/pages/splash/splash.dart';
-import '/providers/auth_state_provider.dart';
 import '/widgets/sliding_shell_stack.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -26,7 +25,7 @@ final routerProvider = Provider<GoRouter>((ref) {
     redirect: (_, state) {
       final location = state.matchedLocation;
 
-      if (authState == AuthStatus.loading) {
+      if (authState == AuthStatus.unknown) {
         return location == '/splash' ? null : '/splash';
       }
 

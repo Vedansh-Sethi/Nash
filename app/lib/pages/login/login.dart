@@ -1,5 +1,4 @@
 import 'package:app/controllers/auth.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -20,8 +19,6 @@ class _LoginPageConsumerState extends ConsumerState<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  bool status = false;
-
   @override
   void dispose() {
     emailController.dispose();
@@ -36,6 +33,10 @@ class _LoginPageConsumerState extends ConsumerState<LoginPage> {
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
+            final bool isLoading = ref
+                .read(authControllerProvider.notifier)
+                .isLoggingIn;
+
             return SingleChildScrollView(
               child: ConstrainedBox(
                 constraints: BoxConstraints(minHeight: constraints.maxHeight),
@@ -91,10 +92,9 @@ class _LoginPageConsumerState extends ConsumerState<LoginPage> {
                                 ),
                                 const SizedBox(height: 32.0),
                                 CreationButton(
-                                  onPressed: status
+                                  onPressed: isLoading
                                       ? null
                                       : () async {
-                                          setState(() => status = true);
                                           try {
                                             await ref
                                                 .read(
@@ -106,19 +106,19 @@ class _LoginPageConsumerState extends ConsumerState<LoginPage> {
                                                   password:
                                                       passwordController.text,
                                                 );
-                                          } catch (e) {
-                                            ScaffoldMessenger.of(
-                                              context,
-                                            ).showSnackBar(
-                                              const SnackBar(
-                                                content: Text('Login failed'),
-                                              ),
-                                            );
+                                          } catch (_) {
+                                            if (context.mounted) {
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                const SnackBar(
+                                                  content: Text('Login failed'),
+                                                ),
+                                              );
+                                            }
                                           }
-
-                                          setState(() => status = false);
                                         },
-                                  title: "Login",
+                                  title: isLoading ? "Logging in..." : "Login",
                                 ),
                               ],
                             ),
@@ -136,27 +136,29 @@ class _LoginPageConsumerState extends ConsumerState<LoginPage> {
                                 horizontal: 28.0,
                                 vertical: 12.0,
                               ),
-                              child: RichText(
-                                text: TextSpan(
-                                  style: context.textTheme.bodyMedium!.copyWith(
-                                    color: context.colorScheme.onSurface,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "New to the app? ",
+                                    style: context.textTheme.bodyMedium!
+                                        .copyWith(
+                                          color: context.colorScheme.onSurface,
+                                        ),
                                   ),
-                                  children: <TextSpan>[
-                                    TextSpan(text: "New to the app? "),
-                                    TextSpan(
-                                      text: 'Register',
+                                  GestureDetector(
+                                    onTap: () => context.go('/auth/register'),
+                                    child: Text(
+                                      "Register",
                                       style: context.textTheme.bodySmall!
                                           .copyWith(
                                             color: context.colorScheme.primary,
                                             fontWeight: FontWeight.bold,
                                           ),
-                                      recognizer: TapGestureRecognizer()
-                                        ..onTap = () {
-                                          context.go('/auth/register');
-                                        },
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),

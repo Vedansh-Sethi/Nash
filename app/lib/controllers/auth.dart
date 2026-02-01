@@ -1,13 +1,17 @@
 import 'package:app/providers/user_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '/providers/auth_state_provider.dart';
 import '/providers/dio_provider.dart';
 import '/services/storage_service.dart';
 
+enum AuthStatus { unknown, authenticated, unauthenticated }
+
 class AuthController extends Notifier<AuthStatus> {
   @override
-  AuthStatus build() => AuthStatus.loading;
+  AuthStatus build() => AuthStatus.unknown;
+
+  bool _isLoggingIn = false;
+  bool get isLoggingIn => _isLoggingIn;
 
   Future<void> logout() async {
     await storage.deleteAll();
@@ -20,7 +24,8 @@ class AuthController extends Notifier<AuthStatus> {
   }
 
   Future<void> login({required String email, required String password}) async {
-    state = AuthStatus.loading;
+    _isLoggingIn = true;
+    ref.notifyListeners();
 
     try {
       final dio = ref.read(dioProvider);
@@ -44,6 +49,9 @@ class AuthController extends Notifier<AuthStatus> {
     } catch (e) {
       state = AuthStatus.unauthenticated;
       rethrow;
+    } finally {
+      _isLoggingIn = false;
+      ref.notifyListeners();
     }
   }
 }

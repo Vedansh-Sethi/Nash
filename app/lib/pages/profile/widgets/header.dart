@@ -1,10 +1,12 @@
-import '/config/theme.dart';
+import 'package:app/controllers/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '/config/theme.dart';
 import '/widgets/rounded_icon_button.dart';
 
-class ProfileHeader extends StatelessWidget {
+class ProfileHeader extends ConsumerWidget {
   final GlobalKey headerKey;
   final Map<String, dynamic> data;
   final String heroTag;
@@ -17,7 +19,7 @@ class ProfileHeader extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       key: headerKey,
       mainAxisSize: MainAxisSize.min,
@@ -35,7 +37,7 @@ class ProfileHeader extends StatelessWidget {
               const Spacer(),
               RoundedIconButton(
                 icon: Icons.power_settings_new_rounded,
-                onTap: () => print("LOGOUT!"),
+                onTap: ref.read(authControllerProvider.notifier).logout,
                 color: context.colorScheme.surface,
               ),
             ],
