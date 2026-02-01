@@ -1,19 +1,21 @@
-import 'package:app/config/theme.dart';
-import 'package:app/widgets/creation_button.dart';
-import 'package:app/widgets/normal_text_field.dart';
-import 'package:app/widgets/password_text_field.dart';
-import 'package:flutter/gestures.dart';
+import 'package:app/controllers/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class LoginPage extends StatefulWidget {
+import '/config/theme.dart';
+import '/widgets/creation_button.dart';
+import '/widgets/normal_text_field.dart';
+import '/widgets/password_text_field.dart';
+
+class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  ConsumerState<LoginPage> createState() => _LoginPageConsumerState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageConsumerState extends ConsumerState<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -31,6 +33,10 @@ class _LoginPageState extends State<LoginPage> {
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
+            final bool isLoading = ref
+                .read(authControllerProvider.notifier)
+                .isLoggingIn;
+
             return SingleChildScrollView(
               child: ConstrainedBox(
                 constraints: BoxConstraints(minHeight: constraints.maxHeight),
@@ -85,10 +91,34 @@ class _LoginPageState extends State<LoginPage> {
                                   controller: passwordController,
                                 ),
                                 const SizedBox(height: 32.0),
-                                CreationButton(onPressed: () {
-                                  return null;
-                                },
-                                title: "Login"
+                                CreationButton(
+                                  onPressed: isLoading
+                                      ? null
+                                      : () async {
+                                          try {
+                                            await ref
+                                                .read(
+                                                  authControllerProvider
+                                                      .notifier,
+                                                )
+                                                .login(
+                                                  email: emailController.text,
+                                                  password:
+                                                      passwordController.text,
+                                                );
+                                          } catch (_) {
+                                            if (context.mounted) {
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                const SnackBar(
+                                                  content: Text('Login failed'),
+                                                ),
+                                              );
+                                            }
+                                          }
+                                        },
+                                  title: isLoading ? "Logging in..." : "Login",
                                 ),
                               ],
                             ),
@@ -106,27 +136,29 @@ class _LoginPageState extends State<LoginPage> {
                                 horizontal: 28.0,
                                 vertical: 12.0,
                               ),
-                              child: RichText(
-                                text: TextSpan(
-                                  style: context.textTheme.bodyMedium!.copyWith(
-                                    color: context.colorScheme.onSurface,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "New to the app? ",
+                                    style: context.textTheme.bodyMedium!
+                                        .copyWith(
+                                          color: context.colorScheme.onSurface,
+                                        ),
                                   ),
-                                  children: <TextSpan>[
-                                    TextSpan(text: "New to the app? "),
-                                    TextSpan(
-                                      text: 'Register',
+                                  GestureDetector(
+                                    onTap: () => context.go('/auth/register'),
+                                    child: Text(
+                                      "Register",
                                       style: context.textTheme.bodySmall!
                                           .copyWith(
                                             color: context.colorScheme.primary,
                                             fontWeight: FontWeight.bold,
                                           ),
-                                      recognizer: TapGestureRecognizer()
-                                        ..onTap = () {
-                                          context.push('/register');
-                                        },
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),

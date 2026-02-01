@@ -1,12 +1,14 @@
-import 'package:app/config/theme.dart';
-import 'package:app/extensions/number.dart';
 import 'package:flutter/material.dart';
 
-class BalanceCard extends StatelessWidget {
-  final Map<String, dynamic> data;
-  final String heroTag;
+import '/config/theme.dart';
+import '/extensions/number.dart';
+import '/models/user.dart';
 
-  const BalanceCard({super.key, required this.data, required this.heroTag});
+class BalanceCard extends StatelessWidget {
+  final User user;
+  final int lastMonth;
+
+  const BalanceCard({super.key, required this.user, required this.lastMonth});
 
   @override
   Widget build(BuildContext context) {
@@ -23,15 +25,12 @@ class BalanceCard extends StatelessWidget {
                 color: context.colorScheme.onSurface,
               ),
             ),
-            Hero(
-              tag: heroTag,
-              child: Text(
-                "\$${200.formatWithCommas()}",
-                style: TextStyle(
-                  fontSize: 36,
-                  color: context.colorScheme.primary,
-                  fontWeight: FontWeight.bold,
-                ),
+            user.balance!.nashFormat(
+              iconSize: 36,
+              style: TextStyle(
+                fontSize: 36,
+                color: context.colorScheme.primary,
+                fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 16),
@@ -41,8 +40,8 @@ class BalanceCard extends StatelessWidget {
                   "LAST MONTH:   ",
                   style: TextStyle(color: context.colorScheme.onSurfaceVariant),
                 ),
-                Text(
-                  "\$${(data["last_month"] as num).formatWithCommas()}",
+                lastMonth.nashFormat(
+                  iconSize: 18,
                   style: TextStyle(
                     fontSize: 18,
                     color: context.colorScheme.onSurface,

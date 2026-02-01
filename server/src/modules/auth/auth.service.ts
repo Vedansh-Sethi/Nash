@@ -61,6 +61,10 @@ export const login = async (
   if (!(await bcrypt.compare(input.password, authUser.passwordHash)))
     throw new Error("Invalid credentials!");
 
+  try {
+    await userRepository.performDailyCheckIn(authUser.id);
+  } catch (err) {}
+
   const accessToken = generateJWTToken(user.id);
   const refreshToken = generateRefreshToken();
 

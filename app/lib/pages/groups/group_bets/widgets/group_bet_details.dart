@@ -1,5 +1,5 @@
-import 'package:app/config/theme.dart';
-import 'package:app/extensions/number.dart';
+import '/config/theme.dart';
+import '/extensions/number.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -17,8 +17,7 @@ class GroupBetDetailsCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "\$${(data["total_pot"] as num).formatWithCommas()}",
+              (data["total_pot"] as num).nashFormat(
                 style: TextStyle(
                   fontSize: 30,
                   color: context.colorScheme.secondary,

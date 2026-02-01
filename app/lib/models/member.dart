@@ -22,7 +22,7 @@ class GroupMember {
       username: data['username'],
       email: data['email'],
       role: role,
-      joinedAt: data['joined_at']
+      joinedAt: DateTime.parse(data['joined_at'])
     );
   }
 }

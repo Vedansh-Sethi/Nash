@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:app/config/theme.dart';
-import 'package:app/pages/bet/bet_discussion.dart';
+import '/config/theme.dart';
+import '/pages/bet/bet_discussion.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -56,7 +56,16 @@ class _BetPageState extends State<BetPage> {
     };
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text(
+          "NASH",
+          style: TextStyle(
+            color: context.colorScheme.secondary,
+            fontWeight: FontWeight.bold,
+            fontSize: 26,
+          ),
+        ),
+      ),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
