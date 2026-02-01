@@ -145,12 +145,10 @@ export const getUserPlacedBets = async (userId: string): Promise<UserBet[]> => {
   return result.rows;
 };
 
-export const getOpenBetsFromPlacedBets = async (
-  betIds: string[],
-): Promise<Bet[]> => {
+export const getOpenPlacedBets = async (userID: string): Promise<any> => {
   const result = await pool.query(
-    `SELECT * FROM bets JOIN user_bets ON bets.id=user_bets.bet_id WHERE id=ANY($1) AND status=$2`,
-    [betIds, "open"],
+    `SELECT * FROM bets JOIN user_bets ON bets.id=user_bets.bet_id WHERE status='open' AND user_id=$1`,
+    [userID],
   );
 
   return result.rows;
