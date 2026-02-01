@@ -1,8 +1,9 @@
 import 'dart:math';
 
-import 'package:app/config/theme.dart';
-import 'package:app/pages/bet/bet_discussion.dart';
+import '/config/theme.dart';
+import '/pages/bet/bet_discussion.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'bet_details.dart';
 
@@ -55,7 +56,16 @@ class _BetPageState extends State<BetPage> {
     };
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text(
+          "NASH",
+          style: TextStyle(
+            color: context.colorScheme.secondary,
+            fontWeight: FontWeight.bold,
+            fontSize: 26,
+          ),
+        ),
+      ),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -149,6 +159,27 @@ class _BetPageState extends State<BetPage> {
           ],
         ),
       ),
+      floatingActionButton: page == 0
+          ? FloatingActionButton.extended(
+              onPressed: () {
+                context.push('/groups/:group_id/bets/:bet_id/resolve');
+              },
+              backgroundColor: context.colorScheme.secondary,
+              label: Row(
+                children: [
+                  Icon(
+                    Icons.flaky_rounded,
+                    color: context.colorScheme.onSecondary,
+                    size: 24,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text('Resolve', style: TextStyle()),
+                  ),
+                ],
+              ),
+            )
+          : null,
     );
   }
 }

@@ -9,5 +9,6 @@ router.get('/groups', authenticate, userControllers.getGroups)
 router.get('/placed_bets', authenticate, userControllers.getUserPlacedOpenBets)
 router.get('/created_bets', authenticate, userControllers.getUserCreatedOpenBets)
 router.get('/:user_id', authenticate, userControllers.getUser)
+router.get("/me", authenticate, userControllers.getCurrentUser);
 
 export default router;
