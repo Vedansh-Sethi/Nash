@@ -1,8 +1,10 @@
-import '/config/theme.dart';
-import '/extensions/number.dart';
+import 'package:app/controllers/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
+import '/config/theme.dart';
+import '/extensions/number.dart';
 
 class MainScaffold extends ConsumerStatefulWidget {
   final StatefulNavigationShell navigationShell;
@@ -112,12 +114,16 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                     ),
                     child: Hero(
                       tag: 'wallet-main',
-                      child: 200.nashFormat(
-                        style: TextStyle(
-                          color: context.colorScheme.primary,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      child: ref
+                          .read(userControllerProvider)
+                          .value!
+                          .balance!
+                          .nashFormat(
+                            style: TextStyle(
+                              color: context.colorScheme.primary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                     ),
                   ),
                 ],

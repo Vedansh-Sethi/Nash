@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '/services/storage_service.dart';
 import '../../controllers/auth.dart';
+import '../../controllers/user.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -15,24 +16,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _checkAuth();
-  }
 
-  Future<void> _checkAuth() async {
-    final token = await storage.read(key: StorageService.keyAccessToken);
-
-    await Future.delayed(Duration.zero);
-
-    if (token == null) {
-      ref.read(authControllerProvider.notifier).logout();
-    } else {
-      ref.read(authControllerProvider.notifier).setAuthenticated();
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    ref.listen<AuthStatus>(authControllerProvider, (prev, next) {
+    ref.listenManual<AuthStatus>(authControllerProvider, (prev, next) {
       if (prev == AuthStatus.authenticated &&
           next == AuthStatus.unauthenticated) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -41,6 +26,33 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       }
     });
 
+    _checkAuth();
+  }
+
+  Future<void> _checkAuth() async {
+    final token = await storage.read(key: StorageService.keyAccessToken);
+
+    if (token == null) {
+      ref.read(authControllerProvider.notifier).logout();
+    } else {
+      await ref.read(userControllerProvider.future);
+
+      final userState = ref.read(userControllerProvider);
+
+      userState.when(
+        data: (_) {
+          ref.read(authControllerProvider.notifier).setAuthenticated();
+        },
+        error: (_, __) {
+          ref.read(authControllerProvider.notifier).logout();
+        },
+        loading: () {},
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return const Scaffold(body: Center(child: CircularProgressIndicator()));
   }
 }
