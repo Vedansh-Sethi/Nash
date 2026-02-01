@@ -26,13 +26,16 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    final User user = ref.read(userControllerProvider).value!;
+    final User user = ref.watch(userControllerProvider).value!;
 
     return Scaffold(
       appBar: AppBar(
         leading: Padding(
           padding: const EdgeInsetsGeometry.all(4.0),
-          child: Image.asset('assets/logo-removebg-preview.png', fit: BoxFit.contain),
+          child: Image.asset(
+            'assets/logo-removebg-preview.png',
+            fit: BoxFit.contain,
+          ),
         ),
         title: Text(
           "NASH",
