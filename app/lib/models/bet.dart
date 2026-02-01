@@ -4,9 +4,9 @@ enum Status { open, resolved, locked }
 
 class Bet {
   final String title;
-  final double totalPot;
-  final double poolFor;
-  final double poolAgainst;
+  final int totalPot;
+  final int poolFor;
+  final int poolAgainst;
   final Status status;
   final String createdBy;
   final DateTime createdAt;
@@ -25,27 +25,28 @@ class Bet {
     this.myBet,
   });
 
-  static fromJSON(Map<String, dynamic> data) {
-    Status status = Status.resolved;
+  factory Bet.fromJSON(Map<String, dynamic> json) {
 
-    if (data['status'] == 'open') {
+    Status status = Status.locked;
+    switch(json['status']) {
+      case 'open' :
       status = Status.open;
-    } else if (data['status'] == 'resolved') {
+      case 'resolved' :
       status = Status.resolved;
-    } else if (data['status'] == 'locked') {
+      case 'locked' :
       status = Status.locked;
     }
 
     return Bet(
       status: status,
-      title: data['title'],
-      totalPot: data['total_pot'],
-      poolFor: data['pool_for'],
-      poolAgainst: data['pool_against'],
-      createdAt: data['created_at'],
-      createdBy: data['created_by'],
-      endsAt: data['ends_at'],
-      myBet: data["my_bet"] != null ? PlacedBet.fromJSON(data['my_bet']) : null,
+      title: json['title'],
+      totalPot: json['total_pot'],
+      poolFor: json['pool_for'],
+      poolAgainst: json['pool_against'],
+      createdAt: DateTime.parse(json['created_at']),
+      createdBy: json['created_by'],
+      endsAt: DateTime.parse(json['ends_at']),
+      myBet: json["my_bet"] != null ? PlacedBet.fromJSON(json['my_bet']) : null,
     );
   }
 }
